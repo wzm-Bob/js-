@@ -315,7 +315,7 @@ console.log(Array.isArray([1, 2, 3]));
 	console.log('map', map, map.get(arr));
 }
 
-{
+{·
 	let map = new Map([
 		['a', 123],
 		['b', 456]

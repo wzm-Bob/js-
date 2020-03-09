@@ -96,7 +96,253 @@ es6继承 class child extends parent {
 		this.sub = 'aa'
 	}
 }
+//1.最简单的类
+// function Person(){
 
+//     this.name='张三';
+//     this.age=20;
+// }
+// var p=new Person();
+// alert(p.name);
+
+
+
+//2、构造函数和原型链里面增加方法
+
+
+// function Person(){
+
+//     this.name='张三';  /*属性*/
+//     this.age=20;
+//     this.run=function(){
+
+//         alert(this.name+'在运动');
+//     }
+
+// }
+// //原型链上面的属性会被多个实例共享   构造函数不会
+// Person.prototype.sex="男";
+// Person.prototype.work=function(){
+//     alert(this.name+'在工作');
+
+// }
+// var p=new Person();
+// // alert(p.name);
+// // p.run();
+// p.work();
+
+
+
+//3类里面的静态方法
+
+
+// function Person(){
+
+//     this.name='张三';  /*属性*/
+//     this.age=20;
+//     this.run=function(){  /*实例方法*/
+
+//         alert(this.name+'在运动');
+//     }
+
+// }
+
+// Person.getInfo=function(){
+
+//     alert('我是静态方法');
+// }
+// //原型链上面的属性会被多个实例共享   构造函数不会
+// Person.prototype.sex="男";
+// Person.prototype.work=function(){
+//     alert(this.name+'在工作');
+
+// }
+// var p=new Person();    
+// p.work();
+
+// //调用静态方法
+// Person.getInfo();
+
+
+
+// 4、es5里面的继承   对象冒充实现继承
+
+
+//    function Person(){
+//         this.name='张三';  /*属性*/
+//         this.age=20;
+//         this.run=function(){  /*实例方法*/
+//             alert(this.name+'在运动');
+//         }
+
+//     }      
+//     Person.prototype.sex="男";
+//     Person.prototype.work=function(){
+//          alert(this.name+'在工作');
+
+//     }
+
+//     //Web类 继承Person类   原型链+对象冒充的组合继承模式
+
+//     function Web(){
+
+//         Person.call(this);    /*对象冒充实现继承*/
+//     }
+
+//     var w=new Web();
+//    // w.run();  //对象冒充可以继承构造函数里面的属性和方法
+
+//     w.work();  //对象冒充可以继承构造函数里面的属性和方法   但是没法继承原型链上面的属性和方法
+
+
+
+// 5、es5里面的继承   原型链实现继承
+
+//    function Person(){
+//         this.name='张三';  /*属性*/
+//         this.age=20;
+//         this.run=function(){  /*实例方法*/
+//             alert(this.name+'在运动');
+//         }
+
+//     }      
+//     Person.prototype.sex="男";
+//     Person.prototype.work=function(){
+//          alert(this.name+'在工作');
+
+//     }
+
+//     //Web类 继承Person类   原型链+对象冒充的组合继承模式
+
+//     function Web(){
+
+//     }
+
+//    Web.prototype=new Person();   //原型链实现继承
+//    var w=new Web();
+//     //原型链实现继承:可以继承构造函数里面的属性和方法 也可以继承原型链上面的属性和方法
+//     //w.run();
+
+//     w.work();
+
+
+
+// 6、 原型链实现继承的 问题？
+
+//    function Person(name,age){
+//         this.name=name;  /*属性*/
+//         this.age=age;
+//         this.run=function(){  /*实例方法*/
+//             alert(this.name+'在运动');
+//         }
+
+//     }      
+//     Person.prototype.sex="男";
+//     Person.prototype.work=function(){
+//          alert(this.name+'在工作');
+
+//     }
+
+//    var p=new Person('李四',20);
+//    p.run();
+
+
+
+// function Person(name,age){
+//         this.name=name;  /*属性*/
+//         this.age=age;
+//         this.run=function(){  /*实例方法*/
+//             alert(this.name+'在运动');
+//         }
+
+// }      
+// Person.prototype.sex="男";
+// Person.prototype.work=function(){
+//         alert(this.name+'在工作');
+
+// }
+
+
+// function Web(name,age){
+
+
+// }
+
+// Web.prototype=new Person();
+
+// var w=new Web('赵四',20);   //实例化子类的时候没法给父类传参
+
+// w.run();
+
+// // var w1=new Web('王五',22);
+
+
+
+//7.原型链+对象冒充的组合继承模式
+
+
+//   function Person(name,age){
+//             this.name=name;  /*属性*/
+//             this.age=age;
+//             this.run=function(){  /*实例方法*/
+//                 alert(this.name+'在运动');
+//             }
+
+//     }      
+//     Person.prototype.sex="男";
+//     Person.prototype.work=function(){
+//             alert(this.name+'在工作');
+
+//     }
+
+
+//     function Web(name,age){
+
+//         Person.call(this,name,age);   //对象冒充继承   实例化子类可以给父类传参
+//     }
+
+//     Web.prototype=new Person();
+
+//     var w=new Web('赵四',20);   //实例化子类的时候没法给父类传参
+
+//     // w.run();
+//     w.work();
+
+//     // var w1=new Web('王五',22);
+
+
+
+//8、原型链+对象冒充继承的另一种方式
+
+
+function Person(name, age) {
+	this.name = name; /*属性*/
+	this.age = age;
+	this.run = function() { /*实例方法*/
+		alert(this.name + '在运动');
+	}
+
+}
+Person.prototype.sex = "男";
+Person.prototype.work = function() {
+	alert(this.name + '在工作');
+
+}
+
+
+function Web(name, age) {
+
+	Person.call(this, name, age); //对象冒充继承  可以继承构造函数里面的属性和方法、实例化子类可以给父类传参
+}
+
+Web.prototype = Person.prototype;
+
+var w = new Web('赵四', 20); //实例化子类的时候没法给父类传参
+
+w.run();
+// w.work();
+
+// var w1=new Web('王五',22);
 11. http协议特点 uri 简单快速 无连接(连一次就会断掉) 不记状态
 报文 请求报文（ 请求行 请求头 空行 请求体） 响应报文（ 响应头）
 get请求会被主动缓存 post不会； get在浏览器回退无害 post绘重复提交
@@ -167,15 +413,15 @@ vm.update(vnode) {
 }
 4. data属性变化 触发rerender 新旧vnode对比 重新patch
 
-1.created()在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法
-运算，watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前尚不可用
-2.beforeMount render开始调用
-3.mount  实例被挂载后调用，这时 el 被新创建的 vm.$el 替换了。 
+1. created() 在这一步， 实例已完成以下的配置： 数据观测(data observer)， 属性和方法
+运算， watch / event 事件回调。 然而， 挂载阶段还没开始， $el 属性目前尚不可用
+2. beforeMount render开始调用
+3. mount 实例被挂载后调用， 这时 el 被新创建的 vm.$el 替换了。
 
 注意 mounted 不会保证所有的子组件也都一起被挂载。
-如果你希望等到整个视图都渲染完毕，可以在 mounted 内部使用 vm.$nextTick：
-4.beforeUpdate 数据更新时调用，发生在虚拟 DOM 打补丁之前。
-这里适合在更新之前访问现有的 DOM，比如手动移除已添加的事件监听器。
+如果你希望等到整个视图都渲染完毕， 可以在 mounted 内部使用 vm.$nextTick：
+4. beforeUpdate 数据更新时调用， 发生在虚拟 DOM 打补丁之前。
+这里适合在更新之前访问现有的 DOM， 比如手动移除已添加的事件监听器。
 
 18. 组件化的理解 封装（ 视图 数据 变化逻辑） 复用（ props传递 复用）
 jsx本质 语法糖 类似h函数 解析成js才能运行
@@ -232,8 +478,8 @@ function log() {
 log(123) // 123
 log('name', 456) // name 456
 
-bind 方法直接改变这个函数的 this 指向  并且返回一个新的函数，
- 之后再次调用这个函数的时候 this 都是指向 bind 绑定的第一个参数
+bind 方法直接改变这个函数的 this 指向 并且返回一个新的函数，
+之后再次调用这个函数的时候 this 都是指向 bind 绑定的第一个参数
 
 call 和 apply 的区别
 call 是 apply 的语法糖
@@ -249,10 +495,10 @@ callback - > promise - > generator - > async + await 异步编程
 事件轮训中宏任务执行后看有没有微任务 有的话全部执行 执行完再执行下一个微任务。
 macrotask 和 microtask 表示异步任务的两种分类。
 
-在挂起任务时， JS 引擎会将所有任务按照类别分到这两个队列中， 首先在 macrotask 
-的队列（ 这个队列也被叫做 task queue） 中取出第一个任务， 
+在挂起任务时， JS 引擎会将所有任务按照类别分到这两个队列中， 首先在 macrotask
+的队列（ 这个队列也被叫做 task queue） 中取出第一个任务，
 执行完毕后取出 microtask 队列中的所有任务顺序执行； 之后再取 macrotask 任务，
- 周而复始， 直至两个队列的任务都取完。
+周而复始， 直至两个队列的任务都取完。
 setTimeout(() => {
 	//执行后 回调一个宏事件
 	console.log('内层宏事件3')
@@ -271,7 +517,7 @@ new Promise((resolve) => {
 外层宏事件2
 微事件1
 微事件2
-内层宏事件3• 
+内层宏事件3•
 首先浏览器执行js进入第一个宏任务进入主线程, 遇到 setTimeout 分发到宏任务
 Event Queue中
 
