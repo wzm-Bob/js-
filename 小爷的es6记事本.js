@@ -168,7 +168,8 @@ console.log(Array.isArray([1, 2, 3]));
 		console.log(key);
 	}*/
 }
-
+//检测值是否是NaN
+console.log(Number.isNaN(NaN)); // true
 //字符串大全
 {
 	console.log('fs'.repeat(2))
@@ -245,7 +246,9 @@ console.log(Array.isArray([1, 2, 3]));
 		b: 2
 	};
 	Object.freeze(obj); //冻结对象  冻结后无法修改属性
-} {
+}
+//对象长度
+ {
 	var data = {};
 	var arr = Object.keys(data);
 	console.log(arr.length == 0); //true 为空， false 不为空
@@ -259,6 +262,23 @@ console.log(Array.isArray([1, 2, 3]));
 	const object1 = new Object();
 	object1.property1 = 42; //判断是否有指定的key
 	console.log(object1.hasOwnProperty('property1'));
+}
+//解构 扩展运算符
+{
+	let a, b, rest;
+	[a, b, ...rest] = [1, 2, 3, 4, 5, 6];
+	console.log(a, b, rest);
+} 
+{
+	let a, b;
+	({
+		a,
+		b
+	} = {
+		a: 1,
+		b: 2
+	})
+	console.log(a, b);
 }
 //es6 数据结构
 {
@@ -315,7 +335,7 @@ console.log(Array.isArray([1, 2, 3]));
 	console.log('map', map, map.get(arr));
 }
 
-{·
+{
 	let map = new Map([
 		['a', 123],
 		['b', 456]

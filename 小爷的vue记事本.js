@@ -310,3 +310,19 @@ const state = Vue.observable({
 时触发相应的更新。 也可以作为最小化的跨组件状态存储器;
 始终操作使用 Vue.observable 返回的对象， 而不是传入源对象
 46.
+
+
+
+表单设计： vue - form - making
+工具地址： http: //tools.xiaoyaoji.cn/form
+	GitHub地址： https: //github.com/GavinZhuLei/vue-form-making
+
+	流程设计：
+1、 Bpm。
+工具地址： https: //demo.bpmn.io/s/start。
+	项目地址： https: //github.com/bpmn-io/bpmn-js
+	2、 g6 - editor
+项目地址： https: //github.com/antvis/g6-editor
+	3、 jsplumb
+项目地址： https: //github.com/jsplumb/jsplumb
+	教程地址：[图片] https: //www.kancloud.cn/luponu/jsplumb-tutorial/891366
