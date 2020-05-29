@@ -1,3 +1,109 @@
+一、相关知识点 
+1.虚拟dom用js模拟dom结构,dom操作昂贵,将dom对比放在js层,提高效率。
+2.虚拟dom的底层是snabbdom 核心api函数是h函数创建vnode,patch函数渲染vnode。
+3.mvvm  model + view + viewmodel理解
+data + template + vm组合
+vm = new Vue({ //是view和model绑定的桥梁 
+	// 通过事件绑定监听和data绑定实现
+	el: '#app',
+	data: data,
+	methods: {}
+})
+4.模版就是字符串、是有逻辑的、有变量的、必须转换成js
+5.数据视图分离、解耦、数据驱动、不操作dom。
+6.组件化的理解 封装（ 视图 数据 变化逻辑） 复用（ props传递 复用）
+二、 vue核心
+1. 模版解析成js字符串，生成render函数，data中的属性都变成js变量。
+2. 响应式监听 object.defineproperty =>es6 proxy将data属性代理到vm上。
+没走get的属性 不会执行set 避免重复渲染（如没用的data属性），set将执行updatecomponent()  
+将属性代理到vm的原因是vnode中的变量是vm.变量,而响应式中在data中所以要代理到vm上。
+3. 首次渲染显示页面,且绑定依赖,patch生成dom,初始化到$el上。
+updateComponent() {
+	vm.update(vnode)
+}
+vm.update(vnode) {
+	const prevnode = vm.vnode
+	if (!prevnode) {
+		vm.$el = vm.patch(el, vnode)
+	} else {
+		vm.$el = vm.patch(prevnode, node)
+	}
+}
+4. data属性变化，即set发生，触发rerender 新旧vnode对比 重新patch。
+三、生命周期
+1.beforeCreate  data、watch等配置之前调用，也就是正在解析模板但没有进入响应式监听。
+2. created() vue核心中响应式监听已完成。实例已完成以下的配置： 数据观测(data observer)， 属性和方法
+运算， watch / event 事件回调。 然而， 挂载阶段还没开始， $el 属性目前尚不可用。
+3. beforeMount 在dom绑定前被调用，patch函数vnode对比已经完成。
+4. mounted  vode被绑定到某个dom中，这时 el 被新创建的 vm.$el 替换了。
+注意 mounted 不会保证所有的子组件也都一起被绑定dom。
+如果你希望等到整个视图都渲染完毕， 可以在 mounted 内部使用 vm.$nextTick。
+5. beforeUpdate 可以访问之前的vnode,数据更新时调用，pathch 新旧vnode对比还未开始。
+6. updated 对比后的VONDE挂载到dom,同样不保证所有的子组件渲染完毕。
+四、vue3  https://juejin.im/post/5e9faa8fe51d4546fe263eda?tdsourcetag=s_pctim_aiomsg
+CompositionAPI 组合api  比如所有按钮实现防抖（vue2实现方式 混入、高阶组件装饰、插槽等）
+https://github.com/su37josephxia/vue3-study/blob/master/demo/compositions-api/useMouse.html
+{ 
+	createApp,
+	reactive, // 创建响应式数据对象
+	ref, // 创建一个响应式的数据对象
+	toRefs, // 将响应式数据对象转换为单一响应式对象
+	isRef, // 判断某值是否是引用类型
+	computed, // 创建计算属性
+	watch, // 创建watch监听
+	// 生命周期钩子
+	onMounted,
+	onUpdated,
+	onUnmounted,
+}
+vue3 使用函数组合API可以将关联API抽取到一个组合函数 该函数封装相关联的逻辑，并将需要暴露给组件的
+状态以响应式数据源的形式返回[借鉴自react hooks]。
+setup函数会在 beforeCreate[解析模板]之后 created[模板解析响应式数据完成]之前执行
+setup(props,context){
+    console.log('setup....',)
+    console.log('props',props) // 组件参数
+    console.log('context',context) // 上下文对象
+} 
+1.reactive() 函数接受一个普通对象 返回一个响应式数据对象
+2.ref 将给定的值(确切的说是基本数据类型 int 或 string)创建一个响应式的数据对象
+3.isRef 其实就是判断一下是不是ref生成的响应式数据对象
+//基本数据类型只有值没有引用，这样也就造成了一个问题返回一个基础数据类型比如一个字符串是无法跟踪他的状态的
+4.toRefs 可以将reactive创建出的对象展开为基础类型
+5.effect 副作用函数  响应式对象修改会触发这个函数
+6.生命周期钩子
+beforeCreate created setup(替代)
+beforeMount  onBeforeMount
+mounted  onMounted
+beforeUpdate onBeforeUpdate
+updated onUpdated
+beforeDestroy onBeforeUnmount
+destroyed onUnmounted
+errorCaptured  onErrorCaptured
+7.响应式变化
+https://github.com/su37josephxia/vue3-study/tree/master/demo/reactivity-demo
+VUE3  vdom重写 
+1.静态标记 
+_createVNode第四个参数1，只有带这个参数的，才会被真正的追踪，静态节点不需要遍历。如果同时有props和text的绑定呢， 位运算组合即可。
+export const enum PatchFlags {
+	TEXT = 1,// 表示具有动态textContent的元素
+	CLASS = 1 << 1,  // 表示有动态Class的元素
+	STYLE = 1 << 2,  // 表示动态样式（静态如style="color: red"，也会提升至动态）
+	PROPS = 1 << 3,  // 表示具有非类/样式动态道具的元素。
+	FULL_PROPS = 1 << 4,  // 表示带有动态键的道具的元素，与上面三种相斥
+	HYDRATE_EVENTS = 1 << 5,  // 表示带有事件监听器的元素
+	STABLE_FRAGMENT = 1 << 6,   // 表示其子顺序不变的片段（没懂）。 
+	KEYED_FRAGMENT = 1 << 7, // 表示带有键控或部分键控子元素的片段。
+	UNKEYED_FRAGMENT = 1 << 8, // 表示带有无key绑定的片段
+	NEED_PATCH = 1 << 9,   // 表示只需要非属性补丁的元素，例如ref或hooks
+	DYNAMIC_SLOTS = 1 << 10,  // 表示具有动态插槽的元素
+  }
+2.事件缓存
+传入的事件会自动生成并缓存一个内联函数再cache里，变为一个静态节点。
+Vue3通过Proxy响应式+组件内部vdom+静态标记。
+3.Fragment
+不再限于模板中的单个根节点
+render 函数也可以返回数组了，类似实现了 React.Fragments 的功能 。
+五、vue2基础
 1. 内置component组件（ 单独拿出一个组件来专门进行切换使用）
 使用is来绑定你的组件 常用在有共同的属性需要切换 如邮箱登录
 和密码登录。
@@ -138,7 +244,7 @@ a组件
  </div> <
 	/template> <
 script >
-	import childDom from "@/components/ChildDom.vue";
+import childDom from "@/components/ChildDom.vue";
 export default {
 	name: 'demoNo',
 	data() {
